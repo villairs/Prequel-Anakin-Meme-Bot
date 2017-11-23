@@ -33,6 +33,7 @@ public class ImageGenerator{
   int maxLines,maxTextHeight, maxTextWidth;
   FontMetrics metrics;
   
+  //constructor 1
   public ImageGenerator(String sourceFileName, String verb, String prefix){
     this.verb = verb.toUpperCase(); // has to be uppercase
     this.prefix = prefix.toUpperCase();
@@ -49,6 +50,7 @@ public class ImageGenerator{
      calcTextConstraints();
   }
   
+   //constructor 2
     public ImageGenerator(String sourceFileName, String verb, String prefix, String outputName){
     this.verb = verb.toUpperCase(); // has to be uppercase
     this.prefix = prefix.toUpperCase();
@@ -65,7 +67,9 @@ public class ImageGenerator{
        calcTextConstraints();
   }
   
+    //constructors end
   
+    //scales the image
     public void scaleImage(){
 
     AffineTransform aMatrix = new AffineTransform();
@@ -86,6 +90,7 @@ public class ImageGenerator{
     catch(IOException e){}
   }
   
+  
   //creates strings to draw on the image
   public void createTopText(){
     topText ="I " + verb + " THEM. I " + verb + " THEM ALL.";
@@ -95,6 +100,7 @@ public class ImageGenerator{
   }
   
   
+  //sets up graphics2d
   public void setupGraphics(){
     textDrawer = meme.createGraphics();
     Font font = new Font(chosenFont, Font.BOLD, 90);
@@ -103,10 +109,11 @@ public class ImageGenerator{
     textDrawer.setStroke(new BasicStroke(5));
   }
   
-  public void adjustFontWidth(){//lowers the font size based on width
+  //lowers the font size based on width
+  public void adjustFontWidth(){
   getMetrics();
   calcMaxLines();
-    //if the top text exceeds the image, make the font smaller
+    //if the top text is too long to fit into the image, make the font smaller
     //if the total width of the bottom text exceeds the max number of lines * width of image, make the font smaller
     //for this meme the top text should be on one line, bottom text uses full amount of space
     if((metrics.stringWidth(topText) > maxTextWidth) || (metrics.stringWidth(bottomText) > (maxLines * maxTextWidth)))
@@ -116,9 +123,11 @@ public class ImageGenerator{
     }
   }
   
-  public void adjustFontHeight(){ //lowers font size based on height
+  //lowers font size based on height
+  public void adjustFontHeight(){ 
     getMetrics();
     calcMaxLines();
+    //if the text cannot fit into the alotted space, make it smaller
     if((maxLines*getFontHeight()) + (maxLines*lineSpacing) + yOffset > maxTextHeight){
       System.out.println(getFontHeight());
     decrementFontSize();
@@ -126,36 +135,44 @@ public class ImageGenerator{
     }
   }
   
+  //sets font to working size
   public void adjustFont(){
   adjustFontHeight();
   adjustFontWidth();
   }
 
+  //lowers font size by 1
   public void decrementFontSize(){
     Font font = new Font(chosenFont, Font.BOLD, textDrawer.getFont().getSize()-1);
     textDrawer.setFont(font);
   }
   
+  //gets the font metrics
   public void getMetrics(){
   metrics = textDrawer.getFontMetrics(textDrawer.getFont());
   }
   
-  public void calcMaxLines(){ //calculates how many lines of text can fit within the maximum allowed space
+  //calculates how many lines of text can fit within the maximum allowed space given the current font
+  public void calcMaxLines(){ 
     maxLines = maxTextHeight/getFontHeight(); 
   }
   
-  
-  public int getFontHeight(){ //returns font height
+  //returns font height
+  public int getFontHeight(){ 
     return metrics.getMaxAscent();
   }
   
-  public void calcTextConstraints(){ //calculates max width and height of text 
+  //calculates max width and height of text 
+  public void calcTextConstraints(){ 
   double temp = meme.getHeight()*maxImageCoveragePerText;
   maxTextHeight = (int)temp;
   maxTextWidth = meme.getWidth() - (xOffset*2);
   }
   
-  public ArrayList<String> splitText(String text){ //splits text segments into smaller lines 
+  //splits strings into smaller strings
+  //this is because graphics2d drawString will draw everything on a single line
+  //if you want a string on multiple lines you have to split it up and draw each segment individually
+  public ArrayList<String> splitText(String text){  
     ArrayList<String> arr = new ArrayList<String>();
     StringTokenizer tok = new StringTokenizer(text);
     String stringBuilder = "";
@@ -179,6 +196,7 @@ public class ImageGenerator{
   return arr;
   }
   
+  //writes the top text
   public void writeTopText(){
     int x = xOffset;
     int y = yOffset + getFontHeight();
@@ -193,13 +211,14 @@ public class ImageGenerator{
   }
   
   
+  //writes the bottom text
   public void writeBottomText(){
   int x = xOffset;
   int y = meme.getHeight()-yOffset; 
   ArrayList<String> arr = splitText(bottomText);
   
   textDrawer.translate(x,y);
-  //write in reverse order
+  //write in reverse order starting from the bottom of the image
   for(int i = arr.size()-1; i>=0; i--){
     
     TextLayout outlineLayout = new TextLayout(arr.get(i),textDrawer.getFont(),textDrawer.getFontRenderContext());
@@ -211,8 +230,8 @@ public class ImageGenerator{
  
   }}
   
-  
-  public void generateMeme(){ //makes the image
+  //makes the image
+  public void generateMeme(){ 
    setupGraphics();
    adjustFont();
    writeTopText();
