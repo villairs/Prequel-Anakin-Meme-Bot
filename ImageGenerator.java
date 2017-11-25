@@ -7,6 +7,7 @@ import java.awt.font.TextLayout;
 import java.awt.FontMetrics;
 import java.awt.Color;
 import java.awt.BasicStroke;
+import java.awt.Shape;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.io.File;
@@ -103,10 +104,10 @@ public class ImageGenerator{
   //sets up graphics2d
   public void setupGraphics(){
     textDrawer = meme.createGraphics();
-    Font font = new Font(chosenFont, Font.BOLD, 90);
+    Font font = new Font(chosenFont, Font.PLAIN, 90);
     textDrawer.setFont(font);
     textDrawer.setColor(Color.WHITE);
-    textDrawer.setStroke(new BasicStroke(5));
+    textDrawer.setStroke(new BasicStroke(4));
   }
   
   //lowers the font size based on width
@@ -136,7 +137,7 @@ public class ImageGenerator{
   }
   
   //sets font to working size
-  public void adjustFont(){
+  public void adjustFontSize(){
   adjustFontHeight();
   adjustFontWidth();
   }
@@ -202,9 +203,11 @@ public class ImageGenerator{
     int y = yOffset + getFontHeight();
     
     TextLayout outlineLayout = new TextLayout(topText,textDrawer.getFont(),textDrawer.getFontRenderContext());
+    Shape outline = outlineLayout.getOutline(null);
     textDrawer.setColor(Color.BLACK);
     textDrawer.translate(x,y);
-    textDrawer.draw(outlineLayout.getOutline(null));
+    textDrawer.draw(outline);
+    
     textDrawer.setColor(Color.WHITE);
     textDrawer.drawString(topText,0,0);
     textDrawer.translate(-x,-y);
@@ -222,8 +225,9 @@ public class ImageGenerator{
   for(int i = arr.size()-1; i>=0; i--){
     
     TextLayout outlineLayout = new TextLayout(arr.get(i),textDrawer.getFont(),textDrawer.getFontRenderContext());
+    Shape outline = outlineLayout.getOutline(null);
     textDrawer.setColor(Color.BLACK);
-    textDrawer.draw(outlineLayout.getOutline(null));
+    textDrawer.draw(outline);
     textDrawer.setColor(Color.WHITE);
     textDrawer.drawString(arr.get(i),0,0);
     textDrawer.translate(0,-getFontHeight()-lineSpacing);
@@ -233,7 +237,7 @@ public class ImageGenerator{
   //makes the image
   public void generateMeme(){ 
    setupGraphics();
-   adjustFont();
+   adjustFontSize();
    writeTopText();
    writeBottomText();
    saveImage();
