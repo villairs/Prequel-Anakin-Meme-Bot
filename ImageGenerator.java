@@ -244,19 +244,18 @@ public class ImageGenerator{
   
   
   public static void main(String args[]){
-   
-    ImageGenerator g = new ImageGenerator("anakinlol.jpg","paid","work");
-     if (args.length == 1){
-    g.generateMeme();
-    g = new ImageGenerator("anakinlol.jpg","looooooooooong text","Loooooooonnnnngg text", "test1.png");
-    g.generateMeme();
-    g = new ImageGenerator("anakinlol.jpg","called","congress", "test2.png");
-    g.generateMeme();}
-    if( args.length == 2){
-    g = new ImageGenerator("anakinlol.jpg", args[0], args[1], "custom.png");
-    g.generateMeme();
-    }
     
+    ImageGenerator g;
+    
+    if( args.length == 2){
+      g = new ImageGenerator("anakinlol.jpg", args[0], args[1], "custom.png");
+      g.generateMeme();
+    }
+    else if(args.length ==3){
+      g = new ImageGenerator("anakinlol.jpg", args[0], args[1], args[2]);
+      g.generateMeme();
+      
+    }
   }  
   
 }
