@@ -82,7 +82,6 @@ public class ImageGenerator{
   
   
   
-  //saves the image into a new file
   public void saveImage(){
     try{
       File outputFile = new File(outputName);
@@ -92,7 +91,6 @@ public class ImageGenerator{
   }
   
   
-  //creates strings to draw on the image
   public void createTopText(){
     topText ="I " + verb + " THEM. I " + verb + " THEM ALL.";
   }
@@ -148,7 +146,6 @@ public class ImageGenerator{
     textDrawer.setFont(font);
   }
   
-  //gets the font metrics
   public void getMetrics(){
   metrics = textDrawer.getFontMetrics(textDrawer.getFont());
   }
@@ -158,12 +155,12 @@ public class ImageGenerator{
     maxLines = maxTextHeight/getFontHeight(); 
   }
   
-  //returns font height
+  //returns font height, from baseline to ascent
   public int getFontHeight(){ 
     return metrics.getMaxAscent();
   }
   
-  //calculates max width and height of text 
+  //reduces font size so it fits the image
   public void calcTextConstraints(){ 
   double temp = meme.getHeight()*maxImageCoveragePerText;
   maxTextHeight = (int)temp;
@@ -247,13 +244,18 @@ public class ImageGenerator{
   
   
   public static void main(String args[]){
+   
     ImageGenerator g = new ImageGenerator("anakinlol.jpg","paid","work");
+     if (args.length == 1){
     g.generateMeme();
     g = new ImageGenerator("anakinlol.jpg","looooooooooong text","Loooooooonnnnngg text", "test1.png");
     g.generateMeme();
     g = new ImageGenerator("anakinlol.jpg","called","congress", "test2.png");
+    g.generateMeme();}
+    if( args.length == 2){
+    g = new ImageGenerator("anakinlol.jpg", args[0], args[1], "custom.png");
     g.generateMeme();
-    
+    }
     
   }  
   
