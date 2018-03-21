@@ -1,0 +1,61 @@
+public class PepperRidgeMemeGenerator extends ImageGenerator{
+
+  String top,bot;
+  
+  public PepperRidgeMemeGenerator(String sourceFileName, String top){
+    super(sourceFileName);
+    this.top =top.toUpperCase();
+    createText();
+  }
+  
+    public PepperRidgeMemeGenerator(String sourceFileName, String top,String outputName){
+this(sourceFileName,top);
+    this.outputName = outputName;
+  }
+  
+  @Override
+  protected void createText(){
+    topText = "REMEMBER WHEN " + top;
+    bottomText ="PEPPERRIDGE FARM REMEMBERS";
+  }
+  
+  @Override
+     protected void adjustFontWidth(){
+    calcMaxLines();
+    //bottom text should be on one line
+    if((textDrawer.getFontMetrics().stringWidth(topText) > maxLines * maxTextWidth) || (textDrawer.getFontMetrics().stringWidth(bottomText) > maxTextWidth))
+    {
+      decrementFontSize();
+      adjustFontWidth();
+    }
+  }
+     
+       @Override
+  protected void write(){
+    String[] topA = splitText(topText).toArray(new String[splitText(topText).size()]);
+    writeText(xOffset,yOffset+getFontHeight()*topA.length,topA);
+    writeText(xOffset,meme.getHeight()-yOffset,new String[]{bottomText} );
+  }
+  
+  
+  
+  public static void main(String args[]){
+    
+    PepperRidgeMemeGenerator g;
+    
+    switch(args.length){
+      case(2):
+        g = new PepperRidgeMemeGenerator("pepper.png", args[0], "customPepper.png");
+        break;
+      case(3):
+        g = new PepperRidgeMemeGenerator("pepper.png", args[0], args[1]);
+        break;
+      default:
+        g = new PepperRidgeMemeGenerator("pepper.png", "when cars wern't invented yet?", "defaultPepper.png");
+        break;
+    }
+    
+    g.generateMeme();
+    
+  }
+}

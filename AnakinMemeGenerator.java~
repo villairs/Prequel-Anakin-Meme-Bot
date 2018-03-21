@@ -1,0 +1,74 @@
+public class AnakinMemeGenerator extends ImageGenerator{
+  
+  String verb,prefix;
+  
+  //constructors start
+  
+  public AnakinMemeGenerator(String sourceFileName, String verb, String prefix){
+    super(sourceFileName);
+    this.verb =verb.toUpperCase();
+    this.prefix=prefix.toUpperCase();
+    createText();
+  }
+  
+  public AnakinMemeGenerator(String sourceFileName, String verb, String prefix, String outputName){
+    this(sourceFileName,verb,prefix);
+    this.outputName = outputName;
+  }
+  //constructors end
+  
+  
+   @Override
+     protected void adjustFontWidth(){  
+    calcMaxLines();
+    //if the top text is too long to fit into the image, make the font smaller
+    //if the total width of the bottom text exceeds the max number of lines * width of image, make the font smaller
+    //for this meme the top text should fit on one line
+    if((textDrawer.getFontMetrics().stringWidth(topText) > maxTextWidth) || (textDrawer.getFontMetrics().stringWidth(bottomText) > maxLines * maxTextWidth))
+    {
+      decrementFontSize();
+      adjustFontWidth();
+    }
+  }
+  
+  @Override
+  protected void createText(){
+    topText ="I " + verb + " THEM. I " + verb + " THEM ALL.";
+    bottomText ="AND NOT JUST THE " + prefix +"MEN, BUT THE " + prefix +"WOMEN AND THE "  + prefix + "CHILDREN TOO.";
+  }
+  
+  @Override
+  protected void write(){
+    String[] botA = splitText(bottomText).toArray(new String[splitText(bottomText).size()]);
+    writeText(xOffset,yOffset+getFontHeight(),new String[]{topText});
+    writeText(xOffset,meme.getHeight()-yOffset,botA );
+  }
+  
+  
+  public static void main(String args[]){
+    
+    AnakinMemeGenerator g;
+    
+    switch(args.length){
+      case(2):
+        g = new AnakinMemeGenerator("anakinlol.jpg", args[0], args[1], "custom.png");
+        break;
+      case(3):
+        g = new AnakinMemeGenerator("anakinlol.jpg", args[0], args[1], args[2]);
+        break;
+      default:
+        g = new AnakinMemeGenerator("anakinlol.jpg", "paid", "work");
+        break;
+    }
+    g.generateMeme();
+    System.out.println(g.textDrawer.getFontMetrics().stringWidth("i"));
+    g.decrementFontSize();
+    System.out.println(g.textDrawer.getFontMetrics().stringWidth("i"));
+    g.decrementFontSize();
+    System.out.println(g.textDrawer.getFontMetrics().stringWidth("i"));
+    g.decrementFontSize();
+    System.out.println(g.textDrawer.getFontMetrics().stringWidth("i"));
+    g.decrementFontSize();
+    System.out.println(g.textDrawer.getFontMetrics().stringWidth("i"));
+  }
+}
